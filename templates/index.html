@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS-Friendly Resume Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ATS-Friendly Resume Generator</h1>
+            <p class="subtitle">Create a professional, ATS-optimized resume that gets past applicant tracking systems</p>
+        </header>
+
+        <form id="resumeForm" action="/generate" method="POST">
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h2 class="section-title">Personal Information</h2>
+                <div class="form-group">
+                    <label for="full_name">Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="john.doe@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" placeholder="San Francisco, CA">
+                    </div>
+                    <div class="form-group">
+                        <label for="linkedin">LinkedIn</label>
+                        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/johndoe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Website/Portfolio</label>
+                    <input type="text" id="website" name="website" placeholder="www.johndoe.com">
+                </div>
+            </div>
+
+            <!-- Professional Summary -->
+            <div class="form-section">
+                <h2 class="section-title">Professional Summary</h2>
+                <div class="form-group">
+                    <label for="summary">Summary</label>
+                    <textarea id="summary" name="summary" rows="4" placeholder="A brief professional summary highlighting your key qualifications, experience, and career objectives. Keep it concise (3-4 sentences)."></textarea>
+                    <small class="form-hint">Tip: Include key skills and achievements that match the job description</small>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="form-section">
+                <h2 class="section-title">Skills</h2>
+                <div class="form-group">
+                    <label for="skills">Skills (comma-separated or grouped)</label>
+                    <textarea id="skills" name="skills" rows="3" placeholder="Technical Skills: Python, JavaScript, React, SQL, AWS&#10;Soft Skills: Team Leadership, Project Management, Communication"></textarea>
+                    <small class="form-hint">Use keywords from job descriptions for better ATS matching</small>
+                </div>
+            </div>
+
+            <!-- Work Experience -->
+            <div class="form-section">
+                <h2 class="section-title">Work Experience</h2>
+                <div id="experienceContainer"></div>
+                <button type="button" class="btn-add" onclick="addExperience()">+ Add Experience</button>
+            </div>
+
+            <!-- Education -->
+            <div class="form-section">
+                <h2 class="section-title">Education</h2>
+                <div id="educationContainer"></div>
+                <button type="button" class="btn-add" onclick="addEducation()">+ Add Education</button>
+            </div>
+
+            <!-- Certifications -->
+            <div class="form-section">
+                <h2 class="section-title">Certifications (Optional)</h2>
+                <div class="form-group">
+                    <label for="certifications">Certifications</label>
+                    <textarea id="certifications" name="certifications" rows="3" placeholder="AWS Certified Solutions Architect - 2023&#10;PMP Certification - Project Management Institute - 2022"></textarea>
+                    <small class="form-hint">One certification per line</small>
+                </div>
+            </div>
+
+            <!-- Projects -->
+            <div class="form-section">
+                <h2 class="section-title">Projects (Optional)</h2>
+                <div class="form-group">
+                    <label for="projects">Notable Projects</label>
+                    <textarea id="projects" name="projects" rows="4" placeholder="E-commerce Platform - Built scalable web application serving 100K+ users&#10;Data Analytics Dashboard - Created real-time visualization tool using React and D3.js"></textarea>
+                    <small class="form-hint">One project per line with brief description</small>
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="form-section">
+                <h2 class="section-title">Additional Information (Optional)</h2>
+                <div class="form-group">
+                    <label for="additional">Additional Information</label>
+                    <textarea id="additional" name="additional" rows="3" placeholder="Languages: English (Native), Spanish (Fluent)&#10;Volunteer: Tech Mentor at Code.org"></textarea>
+                    <small class="form-hint">Awards, languages, volunteer work, publications, etc.</small>
+                </div>
+            </div>
+
+            <!-- Hidden fields for counts -->
+            <input type="hidden" id="experience_count" name="experience_count" value="0">
+            <input type="hidden" id="education_count" name="education_count" value="0">
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Generate Resume PDF</button>
+            </div>
+        </form>
+
+        <footer class="footer">
+            <p><strong>ATS Tips:</strong> This generator creates clean, text-based PDFs optimized for Applicant Tracking Systems. Use standard fonts, clear section headings, and relevant keywords.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
