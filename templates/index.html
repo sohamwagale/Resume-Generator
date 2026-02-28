@@ -1,140 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATS-Friendly Resume Generator</title>
+    <title>ResumeForge — ATS Resume Builder</title>
+    <meta name="description"
+        content="Create a professional, ATS-optimized resume that gets past applicant tracking systems. Free, fast, and beautiful.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>ATS-Friendly Resume Generator</h1>
-            <p class="subtitle">Create a professional, ATS-optimized resume that gets past applicant tracking systems</p>
-        </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <span class="brand-name">ResumeForge</span>
+        </div>
+
+        <div class="sidebar-progress">
+            <div class="progress-label">
+                <span>Completion</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Resume Sections</div>
+            <ul class="nav-list">
+                <li class="nav-item active" data-section="personal" onclick="showSection('personal')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg>
+                    </div>
+                    <span>Personal Info</span>
+                    <div class="nav-check" id="check-personal">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="summary" onclick="showSection('summary')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <span>Summary</span>
+                    <div class="nav-check" id="check-summary">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="skills" onclick="showSection('skills')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    </div>
+                    <span>Skills</span>
+                    <div class="nav-check" id="check-skills">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="experience" onclick="showSection('experience')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                        </svg>
+                    </div>
+                    <span>Experience</span>
+                    <div class="nav-check" id="check-experience">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="education" onclick="showSection('education')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg>
+                    </div>
+                    <span>Education</span>
+                    <div class="nav-check" id="check-education">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="certifications" onclick="showSection('certifications')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="6" />
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                        </svg>
+                    </div>
+                    <span>Certifications</span>
+                    <div class="nav-check" id="check-certifications">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="projects" onclick="showSection('projects')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6" />
+                            <polyline points="8 6 2 12 8 18" />
+                        </svg>
+                    </div>
+                    <span>Projects</span>
+                    <div class="nav-check" id="check-projects">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+                <li class="nav-item" data-section="additional" onclick="showSection('additional')">
+                    <div class="nav-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                    </div>
+                    <span>Additional</span>
+                    <div class="nav-check" id="check-additional">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-clear" onclick="clearForm()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <path d="M3.51 15a9 9 0 1 0 .49-3.51"></path>
+                </svg>
+                Reset Form
+            </button>
+        </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <button class="menu-toggle" id="menuToggle" onclick="toggleMobileSidebar()" aria-label="Toggle menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+            <div class="topbar-title">
+                <div class="topbar-brand">ResumeForge</div>
+                <div class="topbar-subtitle" id="currentSectionName">Personal Information</div>
+            </div>
+            <div class="topbar-actions">
+                <div class="ats-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    ATS Optimized
+                </div>
+            </div>
+        </div>
 
         <form id="resumeForm" action="/generate" method="POST">
-            <!-- Personal Information -->
-            <div class="form-section">
-                <h2 class="section-title">Personal Information</h2>
-                <div class="form-group">
-                    <label for="full_name">Full Name *</label>
-                    <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
-                </div>
-                
-                <div class="form-group">
-                    <label for="job_title">Professional Title/Headline</label>
-                    <input type="text" id="job_title" name="job_title" placeholder="Digital Marketing | SEO | SEM | Content Marketing">
-                    <small class="form-hint">This appears directly under your name (e.g., "Software Engineer | Full Stack Developer")</small>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required placeholder="john.doe@email.com">
+
+            <!-- Section: Personal Information -->
+            <div class="section-panel active" id="section-personal">
+                <div class="panel-header">
+                    <div class="panel-icon personal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                        </svg>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890">
+                    <div>
+                        <h1 class="panel-title">Personal Information</h1>
+                        <p class="panel-desc">Your basic identity and contact details</p>
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" required placeholder="e.g. Jane Smith"
+                            autocomplete="name">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="job_title">Professional Headline</label>
+                        <input type="text" id="job_title" name="job_title"
+                            placeholder="e.g. Software Engineer | Full Stack Developer | React & Node.js">
+                        <small class="form-hint">Appears directly under your name on the resume</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <div class="input-with-icon">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            <input type="email" id="email" name="email" required placeholder="jane.smith@email.com"
+                                autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <div class="input-with-icon">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.62a16 16 0 0 0 6.45 6.45l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000"
+                                autocomplete="tel">
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="location">Location</label>
-                        <input type="text" id="location" name="location" placeholder="San Francisco, CA">
+                        <div class="input-with-icon">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <input type="text" id="location" name="location" placeholder="San Francisco, CA">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="linkedin">LinkedIn</label>
-                        <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/johndoe">
+                        <label for="linkedin">LinkedIn URL</label>
+                        <div class="input-with-icon">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                <rect x="2" y="9" width="4" height="12" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg>
+                            <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/janesmith">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="website">Portfolio / Website</label>
+                        <div class="input-with-icon">
+                            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                            <input type="text" id="website" name="website" placeholder="www.janesmith.dev">
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="website">Website/Portfolio</label>
-                    <input type="text" id="website" name="website" placeholder="www.johndoe.com">
+                <div class="panel-nav">
+                    <div></div>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('summary')">
+                        Next: Summary
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Professional Summary -->
-            <div class="form-section">
-                <h2 class="section-title">Professional Summary</h2>
-                <div class="form-group">
-                    <label for="summary">Summary</label>
-                    <textarea id="summary" name="summary" rows="4" placeholder="A brief professional summary highlighting your key qualifications, experience, and career objectives. Keep it concise (3-4 sentences)."></textarea>
-                    <small class="form-hint">Tip: Include key skills and achievements that match the job description</small>
+            <!-- Section: Professional Summary -->
+            <div class="section-panel" id="section-summary">
+                <div class="panel-header">
+                    <div class="panel-icon summary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Professional Summary</h1>
+                        <p class="panel-desc">A concise pitch highlighting your key strengths</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="summary">Summary</label>
+                        <textarea id="summary" name="summary" rows="6"
+                            placeholder="Results-driven Software Engineer with 5+ years of experience building scalable web applications. Proven expertise in React, Node.js, and cloud infrastructure. Led cross-functional teams to deliver projects 20% under budget while improving performance by 35%."></textarea>
+                        <div class="hint-card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Keep it 3–4 sentences. Include measurable achievements and keywords from the job
+                                description.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('personal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Personal Info
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('skills')">
+                        Next: Skills
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Skills -->
-            <div class="form-section">
-                <h2 class="section-title">Skills</h2>
-                <div class="form-group">
-                    <label for="skills">Skills (comma-separated or grouped)</label>
-                    <textarea id="skills" name="skills" rows="3" placeholder="Technical Skills: Python, JavaScript, React, SQL, AWS&#10;Soft Skills: Team Leadership, Project Management, Communication"></textarea>
-                    <small class="form-hint">Use keywords from job descriptions for better ATS matching</small>
+            <!-- Section: Skills -->
+            <div class="section-panel" id="section-skills">
+                <div class="panel-header">
+                    <div class="panel-icon skills">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Skills</h1>
+                        <p class="panel-desc">Technical and soft skills relevant to the role</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="skills">Skills (comma-separated or grouped by category)</label>
+                        <textarea id="skills" name="skills" rows="6"
+                            placeholder="Technical Skills: Python, JavaScript, React, Node.js, SQL, AWS, Docker&#10;Soft Skills: Team Leadership, Agile/Scrum, Communication, Problem Solving&#10;Tools: Git, Jira, Figma, VS Code"></textarea>
+                        <div class="hint-card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Use "Category: skill1, skill2" format for clean grouping. Mirror keywords from the job
+                                description for ATS matching.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('summary')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Summary
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('experience')">
+                        Next: Experience
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Work Experience -->
-            <div class="form-section">
-                <h2 class="section-title">Work Experience</h2>
+            <!-- Section: Work Experience -->
+            <div class="section-panel" id="section-experience">
+                <div class="panel-header">
+                    <div class="panel-icon experience">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Work Experience</h1>
+                        <p class="panel-desc">Your professional history and key achievements</p>
+                    </div>
+                </div>
+
                 <div id="experienceContainer"></div>
-                <button type="button" class="btn-add" onclick="addExperience()">+ Add Experience</button>
+                <button type="button" class="btn-add-entry" onclick="addExperience()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </svg>
+                    Add Another Experience
+                </button>
+
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('skills')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Skills
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('education')">
+                        Next: Education
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Education -->
-            <div class="form-section">
-                <h2 class="section-title">Education</h2>
+            <!-- Section: Education -->
+            <div class="section-panel" id="section-education">
+                <div class="panel-header">
+                    <div class="panel-icon education">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Education</h1>
+                        <p class="panel-desc">Your academic background and qualifications</p>
+                    </div>
+                </div>
+
                 <div id="educationContainer"></div>
-                <button type="button" class="btn-add" onclick="addEducation()">+ Add Education</button>
-            </div>
+                <button type="button" class="btn-add-entry" onclick="addEducation()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </svg>
+                    Add Another Education
+                </button>
 
-            <!-- Certifications -->
-            <div class="form-section">
-                <h2 class="section-title">Certifications (Optional)</h2>
-                <div class="form-group">
-                    <label for="certifications">Certifications</label>
-                    <textarea id="certifications" name="certifications" rows="3" placeholder="AWS Certified Solutions Architect - 2023&#10;PMP Certification - Project Management Institute - 2022"></textarea>
-                    <small class="form-hint">One certification per line</small>
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('experience')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Experience
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('certifications')">
+                        Next: Certifications
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Projects -->
-            <div class="form-section">
-                <h2 class="section-title">Projects (Optional)</h2>
-                <div class="form-group">
-                    <label for="projects">Notable Projects</label>
-                    <textarea id="projects" name="projects" rows="4" placeholder="E-commerce Platform - Built scalable web application serving 100K+ users&#10;Data Analytics Dashboard - Created real-time visualization tool using React and D3.js"></textarea>
-                    <small class="form-hint">One project per line with brief description</small>
+            <!-- Section: Certifications -->
+            <div class="section-panel" id="section-certifications">
+                <div class="panel-header">
+                    <div class="panel-icon certifications">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="6" />
+                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Certifications</h1>
+                        <p class="panel-desc">Professional credentials and certifications <span
+                                class="optional-tag">Optional</span></p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="certifications">Certifications (one per line)</label>
+                        <textarea id="certifications" name="certifications" rows="6"
+                            placeholder="AWS Certified Solutions Architect – Associate (2023)&#10;Google Professional Cloud Developer (2022)&#10;PMP – Project Management Professional (PMI, 2021)"></textarea>
+                        <div class="hint-card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Include the issuing body and year obtained for maximum credibility.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('education')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Education
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('projects')">
+                        Next: Projects
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Additional Information -->
-            <div class="form-section">
-                <h2 class="section-title">Additional Information (Optional)</h2>
-                <div class="form-group">
-                    <label for="additional">Additional Information</label>
-                    <textarea id="additional" name="additional" rows="3" placeholder="Languages: English (Native), Spanish (Fluent)&#10;Volunteer: Tech Mentor at Code.org"></textarea>
-                    <small class="form-hint">Awards, languages, volunteer work, publications, etc.</small>
+            <!-- Section: Projects -->
+            <div class="section-panel" id="section-projects">
+                <div class="panel-header">
+                    <div class="panel-icon projects">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6" />
+                            <polyline points="8 6 2 12 8 18" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Projects</h1>
+                        <p class="panel-desc">Notable work and side projects <span class="optional-tag">Optional</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="projects">Notable Projects (one per line)</label>
+                        <textarea id="projects" name="projects" rows="7"
+                            placeholder="ResumeForge – Full-stack resume builder (React + Python) with ATS optimization and PDF generation&#10;DataViz Dashboard – Real-time analytics tool serving 10K+ users daily using D3.js and WebSockets&#10;E-commerce API – RESTful API handling $2M/year in transactions built on FastAPI + PostgreSQL"></textarea>
+                        <div class="hint-card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Include tech stack and measurable impact (e.g., users, revenue, performance
+                                gains).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-nav">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('certifications')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Certifications
+                    </button>
+                    <button type="button" class="btn-nav btn-next" onclick="showSection('additional')">
+                        Next: Additional
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <!-- Hidden fields for counts -->
+            <!-- Section: Additional Information -->
+            <div class="section-panel" id="section-additional">
+                <div class="panel-header">
+                    <div class="panel-icon additional">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="panel-title">Additional Information</h1>
+                        <p class="panel-desc">Languages, awards, volunteer work &amp; more <span
+                                class="optional-tag">Optional</span></p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="additional">Additional Details</label>
+                        <textarea id="additional" name="additional" rows="6"
+                            placeholder="Languages: English (Native), Spanish (Professional), Mandarin (Conversational)&#10;Volunteer: Tech Mentor at Code.org (2022–Present)&#10;Awards: Employee of the Year, TechCorp 2022&#10;Interests: Open Source Contribution, Public Speaking"></textarea>
+                        <div class="hint-card">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="8" x2="12" y2="12" />
+                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                            </svg>
+                            <span>Use "Label: detail" format (e.g., "Languages: French, Spanish") for organized
+                                output.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Submit -->
+                <div class="generate-section">
+                    <div class="generate-info">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                        <div>
+                            <strong>Ready to generate your resume?</strong>
+                            <span>Your PDF will be ATS-optimized and ready to submit.</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-generate" id="generateBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                        Generate Resume PDF
+                    </button>
+                </div>
+
+                <div class="panel-nav" style="margin-top: 0;">
+                    <button type="button" class="btn-nav btn-prev" onclick="showSection('projects')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        Projects
+                    </button>
+                    <div></div>
+                </div>
+            </div>
+
+            <!-- Hidden fields -->
             <input type="hidden" id="experience_count" name="experience_count" value="0">
             <input type="hidden" id="education_count" name="education_count" value="0">
-
-            <!-- Submit Button -->
-            <div class="form-actions">
-                <button type="submit" class="btn-submit">Generate Resume PDF</button>
-            </div>
         </form>
+    </main>
 
-        <footer class="footer">
-            <p><strong>ATS Tips:</strong> This generator creates clean, text-based PDFs optimized for Applicant Tracking Systems. Use standard fonts, clear section headings, and relevant keywords.</p>
-        </footer>
-    </div>
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>
